@@ -31,10 +31,10 @@ double background(double const* x, double const* a) {
         ? (yy - (a[3] + a[4] * xx)) / (a[5] + a[6] * xx)
         : 0
     ;
-	return pow(abs(xx - a[7]), a[8]) * exp(a[0] + xx * a[1] + xx * xx * a[2]) * exp(-b * b);
+	return exp(a[0] + xx * a[1] + xx * xx * a[2]) * exp(-b * b);
 }
 
-TF2 f_2d("f_2d", background, 5.0, 7.0, 5.0, 7.0, 9, 2);
+TF2 f_2d("f_2d", background, 5.0, 7.0, 5.0, 7.0, 7, 2);
 double likelihood(double const* parameters) {
 	f_2d.SetParameters(parameters + 8);
     auto x = h_jpk->GetXaxis();
@@ -116,12 +116,14 @@ void fit() {
 	double step[]  {
         1e1, 1e1, 1e1, 1e1, 1e1, 1e1, 1e1, 1e1,
                1,           1,    1,
-        1e-2, 1e-4, 1e-4, 1e-4, 1e-1, 1e-1,
+        1e-2, 1e-4, 1e-4, 1e-4,
+        // 1e-1, 1e-1,
     };
 	double start[] {
         6e4, 8e3, 1e4, 2e4, 2e4, 2e4, 2e4, 6e2,
         -140, -3, -1,
-        -1e-1, 1e-1, 1e-2, 3e-1, 1, 1,
+        -1e-1, 1e-1, 1e-2, 3e-1,
+        // 1, 1,
     };
 	char const* name[] {
 		"c_skk",
@@ -133,7 +135,8 @@ void fit() {
 		"c_lpk",
         "c_lpi",
 		"a", "a_x", "a_x^2",
-        "b", "bx", "c", "cx", "x", "x^"
+        "b", "bx", "c", "cx",
+        // "x", "x^",
 	};
 
 	ROOT::Math::Functor f(&likelihood, std::size(start));
