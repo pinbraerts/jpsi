@@ -38,16 +38,16 @@ void setup_kinematics(TTree& tree, Kinematics& kinematics) {
 }
 
 void read_kinematics(Kinematics& kinematics,
-                     TLorentzVector& m1, TLorentzVector& m2,
-                     TLorentzVector& k1, TLorentzVector& k2,
-		     TLorentzVector& p1, TLorentzVector& p2,
-		     TLorentzVector& i1, TLorentzVector& i2,
-		     TLorentzVector& jpsi) {
-	float const m_muon = 0.1056583755;  // +- 0.0000000023  GeV
-	float const m_kaon = 0.493677;      // +- 0.000016      GeV
-	float const m_pion = 0.13957039;    // +- 0.00000018    GeV
+					 TLorentzVector& m1, TLorentzVector& m2,
+					 TLorentzVector& k1, TLorentzVector& k2,
+					 TLorentzVector& p1, TLorentzVector& p2,
+					 TLorentzVector& i1, TLorentzVector& i2,
+					 TLorentzVector& jpsi) {
+	float const m_muon = 0.1056583755;	// +- 0.0000000023	GeV
+	float const m_kaon = 0.493677;		// +- 0.000016		GeV
+	float const m_pion = 0.13957039;	// +- 0.00000018	GeV
 	float const m_prot = 0.93827208816; // +- 0.00000000029 GeV
-	float const m_jpsi = 3.096916;      // +- 0.000011      GeV
+	float const m_jpsi = 3.096916;		// +- 0.000011		GeV
 
 	for (auto& v: kinematics) {
 		v /= 1000; // GeV
@@ -74,9 +74,9 @@ void selections(TH1& hist, TLorentzVector& mu1, TLorentzVector& mu2, float chi2,
 	// hist.Fill("muon_eta", 1);
 
 	// for (float chi2_r = 1.9; chi2_r >= 0.5; chi2_r -= 0.05) {
-	// 	if (chi2 > chi2_r) return;
-	// 	string name = "chi2 < " + to_string(chi2_r);
-	// 	hist.Fill(name.c_str(), w);
+	//	if (chi2 > chi2_r) return;
+	//	string name = "chi2 < " + to_string(chi2_r);
+	//	hist.Fill(name.c_str(), w);
 	// }
 
 	for (float l = 0.1; l < 10; l += 0.1) {

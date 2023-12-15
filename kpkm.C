@@ -28,8 +28,8 @@ void kpkm() {
 	TH1F k_n("k_n", "k_n", bins, 0, p_max);
 	TH1F p_p("p_p", "p_p", bins, 0, p_max);
 	TH1F p_n("p_n", "p_n", bins, 0, p_max);
-	// TH2F k  (  "k",   "k", bins, 0, 40000, bins, 0, 4000);
-	// TH2F k  (  "p",   "p", bins, 0, 40000, bins, 0, 4000);
+	// TH2F k  (  "k",	 "k", bins, 0, 40000, bins, 0, 4000);
+	// TH2F k  (  "p",	 "p", bins, 0, 40000, bins, 0, 4000);
 	for (size_t i = 0; i < events; ++i) {
 		tree.GetEntry(i);
 		if (k_pdg > 0) {

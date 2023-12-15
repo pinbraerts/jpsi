@@ -22,7 +22,7 @@ namespace std {
 template<class T, std::size_t N>
 constexpr std::size_t size(const T (&array)[N]) noexcept
 {
-    return N;
+	return N;
 }
 
 } // namespace std
@@ -43,17 +43,17 @@ double background(double const* x, double const* a) {
 	double const xx = (x[0] + x[1] - 10) * M_SQRT1_2;
 	double const yy = (x[1] - x[0]) * M_SQRT1_2;
 	double const b = a[5] != 0 || a[6] != 0
-        ? (yy - (a[3] + a[4] * xx)) / (a[5] + a[6] * xx)
-        : 0
-    ;
+		? (yy - (a[3] + a[4] * xx)) / (a[5] + a[6] * xx)
+		: 0
+	;
 	return exp(a[0] + xx * a[1] + xx * xx * a[2]) * exp(-b * b);
 }
 
 TF2 f_2d("f_2d", background, 5.0, 7.0, 5.0, 7.0, 7, 2);
 double likelihood(double const* parameters) {
 	f_2d.SetParameters(parameters + 8);
-    auto x = h_jpk->GetXaxis();
-    auto y = h_jpk->GetYaxis();
+	auto x = h_jpk->GetXaxis();
+	auto y = h_jpk->GetYaxis();
 	const auto N = x->GetNbins();
 	const auto M = y->GetNbins();
 	double L = 0;
@@ -71,7 +71,7 @@ double likelihood(double const* parameters) {
 			double const xx = x->GetBinCenter(i);
 			double const yy = y->GetBinCenter(j);
 			double integral = f_2d.Eval(xx, yy);
-            integral +=
+			integral +=
 				v_skk + v_ski + v_sii +
 				v_dkk + v_dki + v_dii +
 				v_lpk + v_lpi;
@@ -91,7 +91,7 @@ void fit() {
 	auto f_dii = new TFile("filtered/datasets/mc_BD_to_JPSI_PI_PI.root");
 	auto f_lpk = new TFile("filtered/datasets/mc_LAMBDA0B_to_JPSI_P_K.root");
 	auto f_lpi = new TFile("filtered/datasets/mc_LAMBDA0B_to_JPSI_P_PI.root");
-    auto f_output = new TFile("output/results.root", "recreate");
+	auto f_output = new TFile("output/results.root", "recreate");
 
 	h_jpk = (TH2F*)f_jpk->Get("jpk2d");
 	h_skk = (TH2F*)f_skk->Get("jpk2d");
@@ -129,41 +129,41 @@ void fit() {
 	m.SetPrintLevel(1);
 
 	double step[]  {
-        1e1, 1e1, 1e1, 1e1, 1e1, 1e1, 1e1, 1e1,
-               1,           1,    1,
-        1e-2, 1e-4, 1e-4, 1e-4,
-        // 1e-1, 1e-1,
-    };
+		1e1, 1e1, 1e1, 1e1, 1e1, 1e1, 1e1, 1e1,
+			   1,			1,	  1,
+		1e-2, 1e-4, 1e-4, 1e-4,
+		// 1e-1, 1e-1,
+	};
 	double start[] {
-        6e4, 8e3, 1e4, 2e4, 2e4, 2e4, 2e4, 6e2,
-        -140, -3, -1,
-        -1e-1, 1e-1, 1e-2, 3e-1,
-        // 1, 1,
-    };
+		6e4, 8e3, 1e4, 2e4, 2e4, 2e4, 2e4, 6e2,
+		-140, -3, -1,
+		-1e-1, 1e-1, 1e-2, 3e-1,
+		// 1, 1,
+	};
 	char const* name[] {
 		"c_skk",
-        "c_ski",
-        "c_sii",
+		"c_ski",
+		"c_sii",
 		"c_dkk",
-        "c_dki",
-        "c_dii",
+		"c_dki",
+		"c_dii",
 		"c_lpk",
-        "c_lpi",
+		"c_lpi",
 		"a", "a_x", "a_x^2",
-        "b", "bx", "c", "cx",
-        // "x", "x^",
+		"b", "bx", "c", "cx",
+		// "x", "x^",
 	};
 
 	ROOT::Math::Functor f(&likelihood, std::size(start));
 	m.SetFunction(f);
 	for (size_t i = 0; i < std::size(start); ++i) {
 		m.SetVariable(i, name[i], start[i], step[i]);
-        if (i <= 7) {
-            m.SetVariableLimits(i, 1e0, 1e6);
-            // m.FixVariable(i);
-            // m.SetVariableLimits(i, 1e2, 1e5);
-            // m.SetFixedVariable(i, name[i], 0);
-        }
+		if (i <= 7) {
+			m.SetVariableLimits(i, 1e0, 1e6);
+			// m.FixVariable(i);
+			// m.SetVariableLimits(i, 1e2, 1e5);
+			// m.SetFixedVariable(i, name[i], 0);
+		}
 	}
 	m.Minimize();
 
@@ -172,10 +172,10 @@ void fit() {
 	for (size_t i = 0; i < std::size(start); ++i) {
 		std::cout << (i + 1) << ") " << name[i] << ' ' << result[i] << std::endl;
 	}
-    f_2d.Write("f_background_combinatorial");
+	f_2d.Write("f_background_combinatorial");
 
-    TVectorD params(std::size(start), result);
-    params.Write("constants");
+	TVectorD params(std::size(start), result);
+	params.Write("constants");
 
 	h_skk->Scale(result[0]);
 	h_ski->Scale(result[1]);
@@ -186,17 +186,17 @@ void fit() {
 	h_lpk->Scale(result[6]);
 	h_lpi->Scale(result[7]);
 
-    auto back = (TH2F*)h_skk->Clone("combinatorial BG");
-    auto full = (TH2F*)h_skk->Clone("full BG");
-    auto x = back->GetXaxis();
-    auto y = back->GetYaxis();
-    auto const N = x->GetNbins();
-    auto const M = y->GetNbins();
-    back->Clear();
-    for (size_t i = 1; i <= N; ++i) {
-        for (size_t j = 1; j <= M; ++j) {
-            auto const xx = x->GetBinCenter(i);
-            auto const yy = y->GetBinCenter(j);
+	auto back = (TH2F*)h_skk->Clone("combinatorial BG");
+	auto full = (TH2F*)h_skk->Clone("full BG");
+	auto x = back->GetXaxis();
+	auto y = back->GetYaxis();
+	auto const N = x->GetNbins();
+	auto const M = y->GetNbins();
+	back->Clear();
+	for (size_t i = 1; i <= N; ++i) {
+		for (size_t j = 1; j <= M; ++j) {
+			auto const xx = x->GetBinCenter(i);
+			auto const yy = y->GetBinCenter(j);
 			double const value = f_2d.Eval(xx, yy);
 			double const v_skk = h_skk->GetBinContent(i, j);
 			double const v_ski = h_ski->GetBinContent(i, j);
@@ -210,79 +210,79 @@ void fit() {
 				v_skk + v_ski + v_sii +
 				v_dkk + v_dki + v_dii +
 				v_lpk + v_lpi);
-            full->SetBinContent(i, j, integral);
-            back->SetBinContent(i, j, value);
-        }
-    }
-    full->Write("background");
-    // back->Write("h_background_combinatorial");
+			full->SetBinContent(i, j, integral);
+			back->SetBinContent(i, j, value);
+		}
+	}
+	full->Write("background");
+	// back->Write("h_background_combinatorial");
 
-    TH2F* histograms[] = {
-        h_jpk, back,
-        h_skk, h_ski, h_sii,
-        h_dkk, h_dii, h_dki,
-        h_lpk, h_lpi
-    };
-    char const* labels[] = {
-        "Data",
-        "Combinatorial BG",
+	TH2F* histograms[] = {
+		h_jpk, back,
+		h_skk, h_ski, h_sii,
+		h_dkk, h_dii, h_dki,
+		h_lpk, h_lpi
+	};
+	char const* labels[] = {
+		"Data",
+		"Combinatorial BG",
 		"B_s \\rightarrow J/\\psi K K",
-        "B_s \\rightarrow J/\\psi K \\pi",
-        "B_s \\rightarrow J/\\psi \\pi \\pi",
+		"B_s \\rightarrow J/\\psi K \\pi",
+		"B_s \\rightarrow J/\\psi \\pi \\pi",
 		"B_d \\rightarrow J/\\psi K K",
-        "B_d \\rightarrow J/\\psi \\pi \\pi",
-        "B_d \\rightarrow J/\\psi K \\pi",
-        "\\Lambda^0_b \\rightarrow J/\\psi p K",
-        "\\Lambda^0_b \\rightarrow J/\\psi p \\pi",
-    };
+		"B_d \\rightarrow J/\\psi \\pi \\pi",
+		"B_d \\rightarrow J/\\psi K \\pi",
+		"\\Lambda^0_b \\rightarrow J/\\psi p K",
+		"\\Lambda^0_b \\rightarrow J/\\psi p \\pi",
+	};
 
-    gStyle->SetOptTitle(0);
-    // gStyle->SetOptStat(0);
-    auto canvas = new TCanvas();
-    auto legendx = new TLegend(0.6, 0.25, 0.9, 0.9);
-    auto legendy = new TLegend(0.6, 0.25, 0.9, 0.9);
-    auto stackx = new THStack("stack", "stack");
-    auto stacky = new THStack("stack", "stack");
-    canvas->Divide(2);
-    for (size_t i = 0; i < std::size(histograms); ++i) {
-        histograms[i]->Write(labels[i]);
-        canvas->cd(1);
-        auto x = histograms[i]->ProjectionX("_px", 1, N);
-        x->SetFillStyle(3001);
-        if (i > 0) {
-            stackx->Add(x);
-        }
-        else {
-            x->SetFillColor(kRed);
-            x->SetLineColor(kRed);
-            x->Draw("E");
-        }
-        x->Write();
-        legendx->AddEntry(x, labels[i]);
+	gStyle->SetOptTitle(0);
+	// gStyle->SetOptStat(0);
+	auto canvas = new TCanvas();
+	auto legendx = new TLegend(0.6, 0.25, 0.9, 0.9);
+	auto legendy = new TLegend(0.6, 0.25, 0.9, 0.9);
+	auto stackx = new THStack("stack", "stack");
+	auto stacky = new THStack("stack", "stack");
+	canvas->Divide(2);
+	for (size_t i = 0; i < std::size(histograms); ++i) {
+		histograms[i]->Write(labels[i]);
+		canvas->cd(1);
+		auto x = histograms[i]->ProjectionX("_px", 1, N);
+		x->SetFillStyle(3001);
+		if (i > 0) {
+			stackx->Add(x);
+		}
+		else {
+			x->SetFillColor(kRed);
+			x->SetLineColor(kRed);
+			x->Draw("E");
+		}
+		x->Write();
+		legendx->AddEntry(x, labels[i]);
 
-        canvas->cd(2);
-        auto y = histograms[i]->ProjectionY("_py", 1, M);
-        y->SetFillStyle(3001);
-        if (i > 0) {
-            stacky->Add(y);
-        }
-        else {
-            y->SetFillColor(kRed);
-            y->SetLineColor(kRed);
-            y->Draw("E");
-        }
-        y->Write();
-        legendy->AddEntry(y, labels[i]);
-    }
+		canvas->cd(2);
+		auto y = histograms[i]->ProjectionY("_py", 1, M);
+		y->SetFillStyle(3001);
+		if (i > 0) {
+			stacky->Add(y);
+		}
+		else {
+			y->SetFillColor(kRed);
+			y->SetLineColor(kRed);
+			y->Draw("E");
+		}
+		y->Write();
+		legendy->AddEntry(y, labels[i]);
+	}
 
-    canvas->cd(1)->SetTitle("x projection");
-    stackx->Draw("noclear same hist pfc");
-    legendx->Draw();
-    canvas->cd(2)->SetName("y projection");
-    stacky->Draw("noclear same hist pfc");
-    legendy->Draw();
-    canvas->Draw();
-    canvas->Write("plot");
-    f_output->Close();
+	canvas->cd(1)->SetTitle("x projection");
+	stackx->Draw("noclear same hist pfc");
+	legendx->Draw();
+	canvas->cd(2)->SetName("y projection");
+	stacky->Draw("noclear same hist pfc");
+	legendy->Draw();
+	canvas->Draw();
+	canvas->Write("plot");
+	f_output->Close();
 
 }

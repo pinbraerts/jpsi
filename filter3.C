@@ -52,16 +52,16 @@ void setup_kinematics(TTree& tree, Kinematics& kinematics) {
 }
 
 void read_kinematics(Kinematics& kinematics,
-                     TLorentzVector& m1, TLorentzVector& m2,
-                     TLorentzVector& k1, TLorentzVector& k2,
-		     TLorentzVector& p1, TLorentzVector& p2,
-		     TLorentzVector& i1, TLorentzVector& i2,
-		     TLorentzVector& jpsi) {
-	float const m_muon = 0.1056583755;  // +- 0.0000000023  GeV
-	float const m_kaon = 0.493677;      // +- 0.000016      GeV
-	float const m_pion = 0.13957039;    // +- 0.00000018    GeV
+					 TLorentzVector& m1, TLorentzVector& m2,
+					 TLorentzVector& k1, TLorentzVector& k2,
+					 TLorentzVector& p1, TLorentzVector& p2,
+					 TLorentzVector& i1, TLorentzVector& i2,
+					 TLorentzVector& jpsi) {
+	float const m_muon = 0.1056583755;	// +- 0.0000000023	GeV
+	float const m_kaon = 0.493677;		// +- 0.000016		GeV
+	float const m_pion = 0.13957039;	// +- 0.00000018	GeV
 	float const m_prot = 0.93827208816; // +- 0.00000000029 GeV
-	float const m_jpsi = 3.096916;      // +- 0.000011      GeV
+	float const m_jpsi = 3.096916;		// +- 0.000011		GeV
 
 	for (auto& v: kinematics) {
 		v /= 1000; // GeV
@@ -93,7 +93,7 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 		obj = f_background.Get("BsAllCandidates");
 	}
 	if (obj == nullptr) {
-        std::cout << "no tree in file " << file << std::endl;
+		std::cout << "no tree in file " << file << std::endl;
 		return;
 	}
 	TTree& background = *(TTree*)obj;
@@ -137,8 +137,8 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 	TH1F h_background("background", "background", n_selections, 0, n_selections);
 	for (size_t i = 0; i < n_background; ++i) {
 		if (i % 100000 == 0) {
-            std::cout << '#';
-            std::cout.flush();
+			std::cout << '#';
+			std::cout.flush();
 		}
 		h_background.Fill("total", 1);
 		background.GetEntry(i);
@@ -190,7 +190,7 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 		h_JKI.Fill(jki.M(), w);
 		h_JKI.Fill(jik.M(), w);
 	}
-    std::cout << std::endl;
+	std::cout << std::endl;
 
 	h_background.Write();
 	h_Jpk.Write();
@@ -205,13 +205,13 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 	h_Jki.Write();
 	f_output.Close();
 
-    std::cout.precision(3);
+	std::cout.precision(3);
 	auto const background_total = h_background.GetBinContent(1);
 	for (size_t i = 1; i < n_selections; ++i) {
 		auto const b = h_background.GetBinContent(i);
 		if (b == 0) break;
 		auto const label = h_background.GetXaxis()->GetBinLabel(i);
-        std::cout << label << ':' << b  << '/' << background_total << '=' << (b * 100 / background_total) << '%' << std::endl;
+		std::cout << label << ':' << b	<< '/' << background_total << '=' << (b * 100 / background_total) << '%' << std::endl;
 	}
 
 }

@@ -4,11 +4,11 @@
 #include "TH1F.h"
 
 void filter() {
-	float const m_muon = 0.1056583755;  // +- 0.0000000023  GeV
-	float const m_kaon = 0.493677;      // +- 0.000016      GeV
-	float const m_pion = 0.13957039;    // +- 0.00000018    GeV
+	float const m_muon = 0.1056583755;	// +- 0.0000000023	GeV
+	float const m_kaon = 0.493677;		// +- 0.000016		GeV
+	float const m_pion = 0.13957039;	// +- 0.00000018	GeV
 	float const m_prot = 0.93827208816; // +- 0.00000000029 GeV
-	float const m_jpsi = 3.096916;      // +- 0.000011      GeV
+	float const m_jpsi = 3.096916;		// +- 0.000011		GeV
 
 	TLorentzVector muon1, muon2, jpsi;
 	TLorentzVector part1, part2, prot, k, pi, pipi, pik, pip, ppi, kpi, kk, pp, kp, pk;
@@ -136,29 +136,29 @@ void filter() {
 		h_pik .Fill(pik .M());
 		h_pip .Fill(pip .M());
 		h_kpi .Fill(kpi .M());
-		h_kk  .Fill(kk  .M());
-		h_kp  .Fill(kp  .M());
+		h_kk  .Fill(kk	.M());
+		h_kp  .Fill(kp	.M());
 		h_ppi .Fill(ppi .M());
-		h_pk  .Fill(pk  .M());
-		h_pp  .Fill(pp  .M());
+		h_pk  .Fill(pk	.M());
+		h_pp  .Fill(pp	.M());
 		h_jpsi.Fill(jpsi.M());
 		w_pipi.Fill(pipi.M(), w);
 		w_pik .Fill(pik .M(), w);
 		w_pip .Fill(pip .M(), w);
 		w_kpi .Fill(kpi .M(), w);
-		w_kk  .Fill(kk  .M(), w);
-		w_kp  .Fill(kp  .M(), w);
+		w_kk  .Fill(kk	.M(), w);
+		w_kp  .Fill(kp	.M(), w);
 		w_ppi .Fill(ppi .M(), w);
-		w_pk  .Fill(pk  .M(), w);
-		w_pp  .Fill(pp  .M(), w);
+		w_pk  .Fill(pk	.M(), w);
+		w_pp  .Fill(pp	.M(), w);
 		w_jpsi.Fill(jpsi.M(), w);
 
 		if (i % 100000 == 0) {
-            std::cout << '#';
-            std::cout.flush();
+			std::cout << '#';
+			std::cout.flush();
 		}
 	}
-    std::cout << std::endl;
+	std::cout << std::endl;
 
 	h_pipi.Write();
 	h_pik .Write();

@@ -43,16 +43,16 @@ void setup_kinematics(TTree& tree, Kinematics& kinematics) {
 }
 
 void read_kinematics(Kinematics& kinematics,
-                     TLorentzVector& m1, TLorentzVector& m2,
-                     TLorentzVector& k1, TLorentzVector& k2,
-		     TLorentzVector& p1, TLorentzVector& p2,
-		     TLorentzVector& i1, TLorentzVector& i2,
-		     TLorentzVector& jpsi) {
-	float const m_muon = 0.1056583755;  // +- 0.0000000023  GeV
-	float const m_kaon = 0.493677;      // +- 0.000016      GeV
-	float const m_pion = 0.13957039;    // +- 0.00000018    GeV
+					 TLorentzVector& m1, TLorentzVector& m2,
+					 TLorentzVector& k1, TLorentzVector& k2,
+					 TLorentzVector& p1, TLorentzVector& p2,
+					 TLorentzVector& i1, TLorentzVector& i2,
+					 TLorentzVector& jpsi) {
+	float const m_muon = 0.1056583755;	// +- 0.0000000023	GeV
+	float const m_kaon = 0.493677;		// +- 0.000016		GeV
+	float const m_pion = 0.13957039;	// +- 0.00000018	GeV
 	float const m_prot = 0.93827208816; // +- 0.00000000029 GeV
-	float const m_jpsi = 3.096916;      // +- 0.000011      GeV
+	float const m_jpsi = 3.096916;		// +- 0.000011		GeV
 
 	for (auto& v: kinematics) {
 		v /= 1000; // GeV
@@ -79,12 +79,12 @@ void selections(TH1& hist, TLorentzVector& mu1, TLorentzVector& mu2, float chi2,
 	// hist.Fill("muon_eta", 1);
 
 	// for (int chi2_r = 190; chi2_r >= 50; chi2_r -= 5) {
-	// 	if (chi2 > chi2_r / 100.0f) return;
-	// 	char name[] = "chi2 < x.xx";
-	//  	name[7]  = '0' + (chi2_r / 100) % 10;
-	//  	name[9]  = '0' + (chi2_r / 10) % 10;
-	// 	name[10] = '0' +  chi2_r % 10;
-	// 	hist.Fill(name, w);
+	//	if (chi2 > chi2_r / 100.0f) return;
+	//	char name[] = "chi2 < x.xx";
+	//		name[7]  = '0' + (chi2_r / 100) % 10;
+	//		name[9]  = '0' + (chi2_r / 10) % 10;
+	//	name[10] = '0' +  chi2_r % 10;
+	//	hist.Fill(name, w);
 	// }
 
 	for (int i = 70; i < 150; i += 5) {
@@ -97,12 +97,12 @@ void selections(TH1& hist, TLorentzVector& mu1, TLorentzVector& mu2, float chi2,
 	}
 
 	// for (int i = 1; i < 100; ++i) {
-	// 	if (pt < i / 100.0f) return;
-	// 	char name[] = "pt(B)/sum pt(track) > x.xx";
-	// 	name[22] = '0' + (i / 100) % 10;
-	// 	name[24] = '0' + (i / 10) % 10;
-	// 	name[25] = '0' +  i % 10;
-	// 	hist.Fill(name, w);
+	//	if (pt < i / 100.0f) return;
+	//	char name[] = "pt(B)/sum pt(track) > x.xx";
+	//	name[22] = '0' + (i / 100) % 10;
+	//	name[24] = '0' + (i / 10) % 10;
+	//	name[25] = '0' +  i % 10;
+	//	hist.Fill(name, w);
 	// }
 
 }
@@ -116,9 +116,9 @@ void select() {
 	float pt = 0, spt = 0;
 
 	TFile f_background("datasets/run2_1quarter.root");
-	TFile f_signal    ("datasets/mc_LAMBDA0B_to_JPSI_P_K.root");
+	TFile f_signal	  ("datasets/mc_LAMBDA0B_to_JPSI_P_K.root");
 	TTree& background = *(TTree*)f_background.Get("stree");
-	TTree& signal     = *(TTree*)f_signal.Get("BsAllCandidates");
+	TTree& signal	  = *(TTree*)f_signal.Get("BsAllCandidates");
 
 	// enable_kinematics(background);
 	// setup_kinematics(background, kinematics);
@@ -161,17 +161,17 @@ void select() {
 		signal.GetEntry(i);
 		// cout << (pt / spt) << endl;
 		// if (pt / spt > 1) {
-		// 	cout << pt << ' ' << spt << endl;
-		// 	getchar();
+		//	cout << pt << ' ' << spt << endl;
+		//	getchar();
 		// }
 		// read_kinematics(kinematics, m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi);
 		selections(h_signal, m1, m2, chi2, w, lxy, pt / (spt + pt));
 		if (i % 1500 == 0) {
-            std::cout << '#';
-            std::cout.flush();
+			std::cout << '#';
+			std::cout.flush();
 		}
 	}
-    std::cout << std::endl;
+	std::cout << std::endl;
 
 	auto const n_background = background.GetEntries();
 	TH1F h_background("background", "background", n_selections, 0, n_selections);
@@ -180,17 +180,17 @@ void select() {
 		if (c1 * c2 < 0) continue;
 		// cout << (pt / spt) << endl;
 		// if (pt / spt > 1) {
-		// 	cout << pt << ' ' << spt << endl;
-		// 	getchar();
+		//	cout << pt << ' ' << spt << endl;
+		//	getchar();
 		// }
 		// read_kinematics(kinematics, m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi);
 		selections(h_background, m1, m2, chi2, 1, lxy, pt / (pt + spt));
 		if (i % 100000 == 0) {
-            std::cout << '#';
-            std::cout.flush();
+			std::cout << '#';
+			std::cout.flush();
 		}
 	}
-    std::cout << std::endl;
+	std::cout << std::endl;
 
 	std::vector<float> background_supression, signal_acceptance;
 	auto const background_total = h_background.GetBinContent(1);
@@ -204,7 +204,7 @@ void select() {
 		background_supression.push_back(bs);
 		signal_acceptance.push_back(sa);
 		auto const label = h_background.GetXaxis()->GetBinLabel(i);
-        std::cout << label << ':' << s << ' ' << b  << ' ' << sa << ' ' << bs << std::endl;
+		std::cout << label << ':' << s << ' ' << b	<< ' ' << sa << ' ' << bs << std::endl;
 	}
 
 	TCanvas canvas;

@@ -41,16 +41,16 @@ void setup_kinematics(TTree& tree, Kinematics& kinematics) {
 }
 
 void read_kinematics(Kinematics& kinematics,
-                     TLorentzVector& m1, TLorentzVector& m2,
-                     TLorentzVector& k1, TLorentzVector& k2,
-		     TLorentzVector& p1, TLorentzVector& p2,
-		     TLorentzVector& i1, TLorentzVector& i2,
-		     TLorentzVector& jpsi) {
-	float const m_muon = 0.1056583755;  // +- 0.0000000023  GeV
-	float const m_kaon = 0.493677;      // +- 0.000016      GeV
-	float const m_pion = 0.13957039;    // +- 0.00000018    GeV
+					 TLorentzVector& m1, TLorentzVector& m2,
+					 TLorentzVector& k1, TLorentzVector& k2,
+					 TLorentzVector& p1, TLorentzVector& p2,
+					 TLorentzVector& i1, TLorentzVector& i2,
+					 TLorentzVector& jpsi) {
+	float const m_muon = 0.1056583755;	// +- 0.0000000023	GeV
+	float const m_kaon = 0.493677;		// +- 0.000016		GeV
+	float const m_pion = 0.13957039;	// +- 0.00000018	GeV
 	float const m_prot = 0.93827208816; // +- 0.00000000029 GeV
-	float const m_jpsi = 3.096916;      // +- 0.000011      GeV
+	float const m_jpsi = 3.096916;		// +- 0.000011		GeV
 
 	for (auto& v: kinematics) {
 		v /= 1000; // GeV
@@ -71,7 +71,7 @@ void pk() {
 	std::vector<float> lambda { 1380, 1405, 1520, 1600, 1670, 1690, 1710, 1800, 1810, 1820, 1830, 1890, 2000, 2050, 2070, 2080, 2085, 2100, 2110, 2325, 2350, 2585 };
 	for (auto& l: lambda) {
 		l /= 1000; // GeV
-        std::cout << l << std::endl;
+		std::cout << l << std::endl;
 	}
 	Kinematics kinematics;
 	float c1 = 0, c2 = 0;
@@ -112,7 +112,7 @@ void pk() {
 	for (size_t i = 0; i < n_background; ++i) {
 		background.GetEntry(i);
 		read_kinematics(kinematics, m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi);
-        const auto w = c1 * c2 > 0 ? -1 : 1;
+		const auto w = c1 * c2 > 0 ? -1 : 1;
 		if (lxy < 0.85) continue;
 		if (pt / (spt + pt) < 0.2) continue;
 		if (chi2 < 1.5) continue;
@@ -129,11 +129,11 @@ void pk() {
 		h_jkm.Fill(jpsik.M(), w);
 		pk = k1 + p2; h_pk.Fill(pk.M());
 		if (i % 100000 == 0) {
-            std::cout << '#';
-            std::cout.flush();
+			std::cout << '#';
+			std::cout.flush();
 		}
 	}
-    std::cout << std::endl;
+	std::cout << std::endl;
 
 	h_pk.Write();
 	h_jk.Write();
