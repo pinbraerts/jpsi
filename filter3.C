@@ -109,7 +109,7 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 	TLorentzVector m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi;
 
 	auto const n_background = background.GetEntries();
-	auto const n_selections = 100;
+	auto const n_selections = 40;
 	TH2F h_Jpk("jpk2d", "jpk2d", n_selections, 5.3, 7, n_selections, 5.3, 7);
 	TH1F h_jpk("jpk", "jpk", n_selections, 5.3, 7);
 	TH1F h_jkp("jkp", "jkp", n_selections, 5.3, 7);
@@ -128,23 +128,31 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 		}
 		h_background.Fill("total", 1);
 		background.GetEntry(i);
+
+		if (chi2 > 1.7) continue;
+		h_background.Fill("chi2 < 1.7", 1);
 		auto w = c1 * c2 < 0 ? 1 : -1;
 		h_background.Fill("different charge", 1);
 		read_kinematics(kinematics, m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi);
+
 		if (pt1 < 2000 || pt2 < 2000) continue;
 		h_background.Fill("pt > 2", w);
+
 		if (pt / (pt + spt) < 0.2) continue;
 		h_background.Fill("pt/spt > 0.2", w);
+
 		if (lxy < 0.85) continue;
 		h_background.Fill("Blxy > 0.85", w);
+
 		auto jk1 = jpsi + k1;
 		auto jk2 = jpsi + k2;
 		if (jk1.M() > 5.1 || jk2.M() > 5.1) continue;
 		h_background.Fill("M(jpsi + k) < 5.1", w);
+
 		auto pk = p1 + k2;
 		auto kp = p2 + k1;
-		if (pk.M() < 1.72 || kp.M() < 1.72) continue;
-		h_background.Fill("M(p + k) > 1.72", w);
+		if (pk.M() < 1.55 || kp.M() < 1.55) continue;
+		h_background.Fill("M(p + k) > 1.55", w);
 
 		auto jpk = jpsi + p1 + k2;
 		auto jkp = jpsi + k1 + p2;
@@ -152,7 +160,6 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 		auto jii = jpsi + pi1 + pi2;
 		auto jki = jpsi + k1 + pi2;
 		auto jik = jpsi + pi1 + k2;
-
 		if (jpk.M() < 5.3 || jkp.M() < 5.3) continue;
 		h_background.Fill("M(jpsi + p + k) > 5.3", w);
 
