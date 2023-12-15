@@ -15,6 +15,20 @@
 #include <Math/IntegratorMultiDim.h>
 #include <TStyle.h>
 
+#if __cplusplus < 201703L
+
+namespace std {
+
+template<class T, std::size_t N>
+constexpr std::size_t size(const T (&array)[N]) noexcept
+{
+    return N;
+}
+
+} // namespace std
+
+#endif // __cplusplus < 201703L
+
 TH2F* h_jpk;
 TH2F* h_skk;
 TH2F* h_ski;
