@@ -1,5 +1,11 @@
+#include <TFile.h>
+#include <TH1.h>
 #include <TTree.h>
 #include <TLorentzVector.h>
+#include <TCanvas.h>
+#include <TGraph.h>
+#include <TLatex.h>
+#include <TLine.h>
 
 #include <array>
 
@@ -161,11 +167,11 @@ void select() {
 		// read_kinematics(kinematics, m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi);
 		selections(h_signal, m1, m2, chi2, w, lxy, pt / (spt + pt));
 		if (i % 1500 == 0) {
-			cout << '#';
-			cout.flush();
+            std::cout << '#';
+            std::cout.flush();
 		}
 	}
-	cout << endl;
+    std::cout << std::endl;
 
 	auto const n_background = background.GetEntries();
 	TH1F h_background("background", "background", n_selections, 0, n_selections);
@@ -180,11 +186,11 @@ void select() {
 		// read_kinematics(kinematics, m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi);
 		selections(h_background, m1, m2, chi2, 1, lxy, pt / (pt + spt));
 		if (i % 100000 == 0) {
-			cout << '#';
-			cout.flush();
+            std::cout << '#';
+            std::cout.flush();
 		}
 	}
-	cout << endl;
+    std::cout << std::endl;
 
 	std::vector<float> background_supression, signal_acceptance;
 	auto const background_total = h_background.GetBinContent(1);
@@ -198,7 +204,7 @@ void select() {
 		background_supression.push_back(bs);
 		signal_acceptance.push_back(sa);
 		auto const label = h_background.GetXaxis()->GetBinLabel(i);
-		cout << label << ':' << s << ' ' << b  << ' ' << sa << ' ' << bs << endl;
+        std::cout << label << ':' << s << ' ' << b  << ' ' << sa << ' ' << bs << std::endl;
 	}
 
 	TCanvas canvas;

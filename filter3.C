@@ -1,8 +1,22 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+#include <array>
 
+#include <TVectorD.h>
+#include <TMath.h>
+#include <TFormula.h>
+#include <TF2.h>
+#include <TH2F.h>
+#include <TCanvas.h>
+#include <THStack.h>
+#include <TLegend.h>
+#include <TFile.h>
+#include <TMinuitMinimizer.h>
+#include <Math/Functor.h>
+#include <Math/IntegratorMultiDim.h>
+#include <TStyle.h>
 #include <TTree.h>
 #include <TLorentzVector.h>
-
-#include <array>
 
 using Kinematics = std::array<float, 3 * 4>;
 
@@ -79,11 +93,11 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 		obj = f_background.Get("BsAllCandidates");
 	}
 	if (obj == nullptr) {
-		cout << "no tree in file " << file << endl;
+        std::cout << "no tree in file " << file << std::endl;
 		return;
 	}
 	TTree& background = *(TTree*)obj;
-	TFile f_output((string("filtered/") + file).c_str(), "recreate");
+	TFile f_output((std::string("filtered/") + file).c_str(), "recreate");
 
 	enable_kinematics(background);
 	setup_kinematics(background, kinematics);
@@ -123,8 +137,8 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 	TH1F h_background("background", "background", n_selections, 0, n_selections);
 	for (size_t i = 0; i < n_background; ++i) {
 		if (i % 100000 == 0) {
-			cout << '#';
-			cout.flush();
+            std::cout << '#';
+            std::cout.flush();
 		}
 		h_background.Fill("total", 1);
 		background.GetEntry(i);
@@ -176,7 +190,7 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 		h_JKI.Fill(jki.M(), w);
 		h_JKI.Fill(jik.M(), w);
 	}
-	cout << endl;
+    std::cout << std::endl;
 
 	h_background.Write();
 	h_Jpk.Write();
@@ -191,13 +205,13 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 	h_Jki.Write();
 	f_output.Close();
 
-	cout.precision(3);
+    std::cout.precision(3);
 	auto const background_total = h_background.GetBinContent(1);
 	for (size_t i = 1; i < n_selections; ++i) {
 		auto const b = h_background.GetBinContent(i);
 		if (b == 0) break;
 		auto const label = h_background.GetXaxis()->GetBinLabel(i);
-		cout << label << ':' << b  << '/' << background_total << '=' << (b * 100 / background_total) << '%' << endl;
+        std::cout << label << ':' << b  << '/' << background_total << '=' << (b * 100 / background_total) << '%' << std::endl;
 	}
 
 }

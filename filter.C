@@ -1,6 +1,7 @@
 #include "TTree.h"
 #include "TFile.h"
 #include "TLorentzVector.h"
+#include "TH1F.h"
 
 void filter() {
 	float const m_muon = 0.1056583755;  // +- 0.0000000023  GeV
@@ -153,11 +154,11 @@ void filter() {
 		w_jpsi.Fill(jpsi.M(), w);
 
 		if (i % 100000 == 0) {
-			cout << '#';
-			cout.flush();
+            std::cout << '#';
+            std::cout.flush();
 		}
 	}
-	cout << endl;
+    std::cout << std::endl;
 
 	h_pipi.Write();
 	h_pik .Write();

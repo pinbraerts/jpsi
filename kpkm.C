@@ -2,6 +2,7 @@
 #include <TFile.h>
 #include <TH1F.h>
 #include <TH2F.h>
+#include <TCanvas.h>
 
 void kpkm() {
 	TFile f_in("datasets/mc_LAMBDA0B_to_JPSI_P_K.root");

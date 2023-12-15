@@ -1,4 +1,7 @@
-
+#include <TFile.h>
+#include <TCanvas.h>
+#include <TLine.h>
+#include <TH1.h>
 #include <TTree.h>
 #include <TLorentzVector.h>
 
@@ -68,7 +71,7 @@ void pk() {
 	std::vector<float> lambda { 1380, 1405, 1520, 1600, 1670, 1690, 1710, 1800, 1810, 1820, 1830, 1890, 2000, 2050, 2070, 2080, 2085, 2100, 2110, 2325, 2350, 2585 };
 	for (auto& l: lambda) {
 		l /= 1000; // GeV
-		cout << l << endl;
+        std::cout << l << std::endl;
 	}
 	Kinematics kinematics;
 	float c1 = 0, c2 = 0;
@@ -126,11 +129,11 @@ void pk() {
 		h_jkm.Fill(jpsik.M(), w);
 		pk = k1 + p2; h_pk.Fill(pk.M());
 		if (i % 100000 == 0) {
-			cout << '#';
-			cout.flush();
+            std::cout << '#';
+            std::cout.flush();
 		}
 	}
-	cout << endl;
+    std::cout << std::endl;
 
 	h_pk.Write();
 	h_jk.Write();
