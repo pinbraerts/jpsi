@@ -138,11 +138,11 @@ void fit() {
 	}
 	m.Minimize();
 
+	TVectorD errs(f.NDim(), m.Errors());
+	errs.Write("errors");
+
 	auto const* result = m.X();
 	f_2d.SetParameters(result + 8);
-	for (size_t i = 0; i < std::size(start); ++i) {
-		std::cout << (i + 1) << ") " << name[i] << ' ' << result[i] << std::endl;
-	}
 	f_2d.Write("f_background_combinatorial");
 
 	TVectorD params(std::size(start), result);
@@ -212,8 +212,11 @@ void fit() {
 	auto canvas = new TCanvas();
 	auto legendx = new TLegend(0.6, 0.25, 0.9, 0.9);
 	auto legendy = new TLegend(0.6, 0.25, 0.9, 0.9);
-	auto stackx = new THStack("stack", "stack");
-	auto stacky = new THStack("stack", "stack");
+	auto stackx = new THStack("stackx", "stackx");
+	auto stacky = new THStack("stacky", "stacky");
+	auto fullx = full->ProjectionX("", 1, N);
+	auto fully = full->ProjectionY("", 1, M);
+	double chi2[2];
 	canvas->Divide(2);
 	for (size_t i = 0; i < std::size(histograms); ++i) {
 		histograms[i]->Write(labels[i]);
@@ -227,6 +230,7 @@ void fit() {
 			x->SetFillColor(kRed);
 			x->SetLineColor(kRed);
 			x->Draw("E");
+			chi2[0] = fullx->Chi2Test(x);
 		}
 		x->Write();
 		legendx->AddEntry(x, labels[i]);
@@ -241,10 +245,15 @@ void fit() {
 			y->SetFillColor(kRed);
 			y->SetLineColor(kRed);
 			y->Draw("E");
+			chi2[1] = fully->Chi2Test(y);
 		}
 		y->Write();
 		legendy->AddEntry(y, labels[i]);
 	}
+
+	TVectorD chi2s(std::size(chi2), chi2);
+	chi2s.Write("chi2s");
+	std::cout << "chi2_x: " << chi2[0] << ", chi2_y: " << chi2[1] << std::endl;
 
 	canvas->cd(1)->SetTitle("x projection");
 	stackx->Draw("noclear same hist pfc");
