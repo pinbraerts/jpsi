@@ -165,8 +165,13 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 
 		auto pk = p1 + k2;
 		auto kp = p2 + k1;
-		if (pk.M() < 1.55 || kp.M() < 1.55) continue;
-		h_background.Fill("M(p + k) > 1.55", w);
+		if (pk.M() < 2 || kp.M() < 2) continue;
+		h_background.Fill("M(p + k) > 2", w);
+
+		auto kpi = k1 + pi2;
+		auto pik = pi1 + k2;
+		if (kpi.M() < 1.55 || pik.M() < 1.55) continue;
+		h_background.Fill("M(pi + k) > 1.55", w);
 
 		auto jpk = jpsi + p1 + k2;
 		auto jkp = jpsi + k1 + p2;
