@@ -1,6 +1,5 @@
 #pragma once
 
-#include "TVectorDfwd.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
 
@@ -19,6 +18,11 @@
 #include <Math/Functor.h>
 #include <Math/IntegratorMultiDim.h>
 #include <TStyle.h>
+#include <TTree.h>
+#include <TLorentzVector.h>
+#include <TGraph.h>
+#include <TLine.h>
+#include <TAnnotation.h>
 
 #if __cplusplus < 201703L
 

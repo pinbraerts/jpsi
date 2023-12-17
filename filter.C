@@ -1,7 +1,4 @@
-#include "TTree.h"
-#include "TFile.h"
-#include "TLorentzVector.h"
-#include "TH1F.h"
+#include "common.hh"
 
 void filter() {
 	float const m_muon = 0.1056583755;	// +- 0.0000000023	GeV
