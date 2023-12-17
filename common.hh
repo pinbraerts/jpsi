@@ -4,6 +4,8 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+#include <TROOT.h>
+#include <TCanvas.h>
 #include <TVectorD.h>
 #include <TMath.h>
 #include <TFormula.h>

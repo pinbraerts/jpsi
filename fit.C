@@ -263,6 +263,5 @@ void fit() {
 	legendy->Draw();
 	canvas->Draw();
 	canvas->Write("plot");
-	f_output->Close();
 
 }
