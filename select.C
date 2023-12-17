@@ -1,228 +1,162 @@
-#include <TFile.h>
-#include <TH1.h>
-#include <TTree.h>
-#include <TLorentzVector.h>
-#include <TCanvas.h>
-#include <TGraph.h>
-#include <TLatex.h>
-#include <TLine.h>
+#include "TStyle.h"
+#include "common.hh"
+#include <string>
 
-#include <array>
-
-using Kinematics = std::array<float, 3 * 4>;
-
-void enable_kinematics(TTree& tree) {
-	tree.SetBranchStatus("*", 0);
-	tree.SetBranchStatus("sB_mu1_px", 1);
-	tree.SetBranchStatus("sB_mu1_py", 1);
-	tree.SetBranchStatus("sB_mu1_pz", 1);
-	tree.SetBranchStatus("sB_mu2_px", 1);
-	tree.SetBranchStatus("sB_mu2_py", 1);
-	tree.SetBranchStatus("sB_mu2_pz", 1);
-	tree.SetBranchStatus("sB_trk1_px", 1);
-	tree.SetBranchStatus("sB_trk1_py", 1);
-	tree.SetBranchStatus("sB_trk1_pz", 1);
-	tree.SetBranchStatus("sB_trk2_px", 1);
-	tree.SetBranchStatus("sB_trk2_py", 1);
-	tree.SetBranchStatus("sB_trk2_pz", 1);
-}
-
-void setup_kinematics(TTree& tree, Kinematics& kinematics) {
-	tree.SetBranchAddress( "sB_mu1_px", &kinematics[0]);
-	tree.SetBranchAddress( "sB_mu1_py", &kinematics[1]);
-	tree.SetBranchAddress( "sB_mu1_pz", &kinematics[2]);
-	tree.SetBranchAddress( "sB_mu2_px", &kinematics[3]);
-	tree.SetBranchAddress( "sB_mu2_py", &kinematics[4]);
-	tree.SetBranchAddress( "sB_mu2_pz", &kinematics[5]);
-	tree.SetBranchAddress("sB_trk1_px", &kinematics[6]);
-	tree.SetBranchAddress("sB_trk1_py", &kinematics[7]);
-	tree.SetBranchAddress("sB_trk1_pz", &kinematics[8]);
-	tree.SetBranchAddress("sB_trk2_px", &kinematics[9]);
-	tree.SetBranchAddress("sB_trk2_py", &kinematics[10]);
-	tree.SetBranchAddress("sB_trk2_pz", &kinematics[11]);
-}
-
-void read_kinematics(Kinematics& kinematics,
-					 TLorentzVector& m1, TLorentzVector& m2,
-					 TLorentzVector& k1, TLorentzVector& k2,
-					 TLorentzVector& p1, TLorentzVector& p2,
-					 TLorentzVector& i1, TLorentzVector& i2,
-					 TLorentzVector& jpsi) {
-	float const m_muon = 0.1056583755;	// +- 0.0000000023	GeV
-	float const m_kaon = 0.493677;		// +- 0.000016		GeV
-	float const m_pion = 0.13957039;	// +- 0.00000018	GeV
-	float const m_prot = 0.93827208816; // +- 0.00000000029 GeV
-	float const m_jpsi = 3.096916;		// +- 0.000011		GeV
-
-	for (auto& v: kinematics) {
-		v /= 1000; // GeV
+void select_step(TH1* hist, float w, int more, int start, int end, int step, float v) {
+	hist->Fill(0.0, w);
+	for (int i = start; i < end; i += step) {
+		if (more) {
+			if (v < i / 100.0f) continue;
+		}
+		else {
+			if (v > i / 100.0f) continue;
+		}
+		hist->Fill(std::to_string(i).c_str(), w);
 	}
-
-	m1.SetXYZM(kinematics[0 + 0], kinematics[0 + 1], kinematics[0 + 2], m_muon);
-	m2.SetXYZM(kinematics[3 + 0], kinematics[3 + 1], kinematics[3 + 2], m_muon);
-	k1.SetXYZM(kinematics[6 + 0], kinematics[6 + 1], kinematics[6 + 2], m_kaon);
-	k2.SetXYZM(kinematics[9 + 0], kinematics[9 + 1], kinematics[9 + 2], m_kaon);
-	p1.SetXYZM(kinematics[6 + 0], kinematics[6 + 1], kinematics[6 + 2], m_prot);
-	p2.SetXYZM(kinematics[9 + 0], kinematics[9 + 1], kinematics[9 + 2], m_prot);
-	i1.SetXYZM(kinematics[6 + 0], kinematics[6 + 1], kinematics[6 + 2], m_pion);
-	i2.SetXYZM(kinematics[9 + 0], kinematics[9 + 1], kinematics[9 + 2], m_pion);
-	jpsi = m1 + m2;
-}
-
-void selections(TH1& hist, TLorentzVector& mu1, TLorentzVector& mu2, float chi2, float w, float Bl, float pt) {
-	hist.Fill("total", w);
-
-	// if (mu1.Pt() < 4 || mu2.Pt() < 4) return;
-	// hist.Fill("muon_pt", 1);
-
-	// if (mu1.Eta() > 2.5 || mu2.Eta() > 2.5) return;
-	// hist.Fill("muon_eta", 1);
-
-	// for (int chi2_r = 190; chi2_r >= 50; chi2_r -= 5) {
-	//	if (chi2 > chi2_r / 100.0f) return;
-	//	char name[] = "chi2 < x.xx";
-	//		name[7]  = '0' + (chi2_r / 100) % 10;
-	//		name[9]  = '0' + (chi2_r / 10) % 10;
-	//	name[10] = '0' +  chi2_r % 10;
-	//	hist.Fill(name, w);
-	// }
-
-	for (int i = 70; i < 150; i += 5) {
-		if (Bl < i / 100.0f) return;
-		char name[] = "B_Lxy > x.xx";
-		name[8]  = '0' + (i / 100) % 10;
-		name[10] = '0' + (i / 10) % 10;
-		name[11] = '0' +  i % 10;
-		hist.Fill(name, w);
-	}
-
-	// for (int i = 1; i < 100; ++i) {
-	//	if (pt < i / 100.0f) return;
-	//	char name[] = "pt(B)/sum pt(track) > x.xx";
-	//	name[22] = '0' + (i / 100) % 10;
-	//	name[24] = '0' + (i / 10) % 10;
-	//	name[25] = '0' +  i % 10;
-	//	hist.Fill(name, w);
-	// }
-
 }
 
 void select() {
-	Kinematics kinematics;
 	float c1 = 0, c2 = 0;
 	float w = 0;
 	float chi2 = 0;
 	float lxy = 0;
 	float pt = 0, spt = 0;
 
-	TFile f_background("datasets/run2_1quarter.root");
-	TFile f_signal	  ("datasets/mc_LAMBDA0B_to_JPSI_P_K.root");
-	TTree& background = *(TTree*)f_background.Get("stree");
-	TTree& signal	  = *(TTree*)f_signal.Get("BsAllCandidates");
+	auto f_background = new TFile("datasets/run2_1quarter.root");
+	auto f_signal	  = new TFile("datasets/mc_LAMBDA0B_to_JPSI_P_K.root");
+	auto f_output     = new TFile("output/selections.root", "recreate");
+	auto background = (TTree*)f_background->Get("stree");
+	auto signal	  = (TTree*)f_signal->Get("BsAllCandidates");
 
-	// enable_kinematics(background);
-	// setup_kinematics(background, kinematics);
-	background.SetBranchStatus ("sB_trk1_charge", 1);
-	background.SetBranchAddress("sB_trk1_charge", &c1);
-	background.SetBranchStatus ("sB_trk2_charge", 1);
-	background.SetBranchAddress("sB_trk2_charge", &c2);
-	background.SetBranchStatus ("sB_Bs_chi2_ndof", 1);
-	background.SetBranchAddress("sB_Bs_chi2_ndof", &chi2);
-	background.SetBranchStatus ("sB_Bs_chi2_ndof", 1);
-	background.SetBranchAddress("sB_Bs_chi2_ndof", &chi2);
-	background.SetBranchStatus ("sB_Lxy_MinA0", 1);
-	background.SetBranchAddress("sB_Lxy_MinA0", &lxy);
-	background.SetBranchStatus ("sB_Bs_pt", 1);
-	background.SetBranchAddress("sB_Bs_pt", &pt);
-	background.SetBranchStatus ("sB_MinA0SumPt", 1);
-	background.SetBranchAddress("sB_MinA0SumPt", &spt);
+	background->SetBranchStatus ("sB_trk1_charge", 1);
+	background->SetBranchAddress("sB_trk1_charge", &c1);
+	background->SetBranchStatus ("sB_trk2_charge", 1);
+	background->SetBranchAddress("sB_trk2_charge", &c2);
+	background->SetBranchStatus ("sB_Bs_chi2_ndof", 1);
+	background->SetBranchAddress("sB_Bs_chi2_ndof", &chi2);
+	background->SetBranchStatus ("sB_Lxy_MinA0", 1);
+	background->SetBranchAddress("sB_Lxy_MinA0", &lxy);
+	background->SetBranchStatus ("sB_Bs_pt", 1);
+	background->SetBranchAddress("sB_Bs_pt", &pt);
+	background->SetBranchStatus ("sB_MinA0SumPt", 1);
+	background->SetBranchAddress("sB_MinA0SumPt", &spt);
 
-	// enable_kinematics(signal);
-	// setup_kinematics(signal, kinematics);
-	signal.SetBranchStatus ("sB_w_trigger", 1);
-	signal.SetBranchAddress("sB_w_trigger", &w);
-	signal.SetBranchStatus ("sB_Bs_chi2_ndof", 1);
-	signal.SetBranchAddress("sB_Bs_chi2_ndof", &chi2);
-	signal.SetBranchStatus ("sB_Bs_chi2_ndof", 1);
-	signal.SetBranchAddress("sB_Bs_chi2_ndof", &chi2);
-	signal.SetBranchStatus ("sB_Lxy_MinA0", 1);
-	signal.SetBranchAddress("sB_Lxy_MinA0", &lxy);
-	signal.SetBranchStatus ("sB_Bs_pt", 1);
-	signal.SetBranchAddress("sB_Bs_pt", &pt);
-	signal.SetBranchStatus ("sB_MinA0SumPt", 1);
-	signal.SetBranchAddress("sB_MinA0SumPt", &spt);
+	signal->SetBranchStatus ("sB_w_trigger", 1);
+	signal->SetBranchAddress("sB_w_trigger", &w);
+	signal->SetBranchStatus ("sB_Bs_chi2_ndof", 1);
+	signal->SetBranchAddress("sB_Bs_chi2_ndof", &chi2);
+	signal->SetBranchStatus ("sB_Lxy_MinA0", 1);
+	signal->SetBranchAddress("sB_Lxy_MinA0", &lxy);
+	signal->SetBranchStatus ("sB_Bs_pt", 1);
+	signal->SetBranchAddress("sB_Bs_pt", &pt);
+	signal->SetBranchStatus ("sB_MinA0SumPt", 1);
+	signal->SetBranchAddress("sB_MinA0SumPt", &spt);
 
-	TLorentzVector m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi;
+	const char* name[] {
+		"\\chi^2(H_b)/N_{dof}",
+		"L_{xy}(H_{b})",
+		"p_t(H_b)/\\sum p_t(track)",
+	};
+	const int start[] { 100, 70, 17, };
+	const int end[] { 191, 120, 30, };
+	const int step[] { 10, 5, 1, };
 
-	auto const n_signal = signal.GetEntries();
-	auto const n_selections = 200;
-	TH1F h_signal("signal", "signal", n_selections, 0, n_selections);
+	TH1F* sa[std::size(name)];
+	const size_t n_selections = 30;
+	for (size_t i = 0; i < std::size(sa); ++i) {
+		std::string nm = name[i];
+		nm += "\\ signal\\ acceptance";
+		sa[i] = new TH1F(nm.c_str(), nm.c_str(), n_selections, start[i], end[i]);
+	}
+	auto const n_signal = signal->GetEntries();
 	for (size_t i = 0; i < n_signal; ++i) {
-		signal.GetEntry(i);
-		// cout << (pt / spt) << endl;
-		// if (pt / spt > 1) {
-		//	cout << pt << ' ' << spt << endl;
-		//	getchar();
-		// }
-		// read_kinematics(kinematics, m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi);
-		selections(h_signal, m1, m2, chi2, w, lxy, pt / (spt + pt));
-		if (i % 1500 == 0) {
+		if (i % 2000 == 0) {
 			std::cout << '#';
 			std::cout.flush();
 		}
+		signal->GetEntry(i);
+		select_step(sa[0], w, 0, start[0], end[0], step[0], chi2);
+		select_step(sa[1], w, 1, start[1], end[1], step[1], lxy);
+		select_step(sa[2], w, 1, start[2], end[2], step[2], pt / (spt + pt));
 	}
 	std::cout << std::endl;
 
-	auto const n_background = background.GetEntries();
-	TH1F h_background("background", "background", n_selections, 0, n_selections);
-	for (size_t i = 0; i < n_background; ++i) {
-		background.GetEntry(i);
+	TH1F* bs[std::size(name)];
+	for (size_t i = 0; i < std::size(bs); ++i) {
+		std::string nm = name[i];
+		nm += "\\ background\\ supression";
+		bs[i] = new TH1F(nm.c_str(), nm.c_str(), n_selections, start[i], end[i]);
+	}
+	auto const n_background = background->GetEntries();
+	for (size_t i = 0; i < n_signal; ++i) {
+		if (i % 2000 == 0) {
+			std::cout << '#';
+			std::cout.flush();
+		}
+		background->GetEntry(i);
 		if (c1 * c2 < 0) continue;
-		// cout << (pt / spt) << endl;
-		// if (pt / spt > 1) {
-		//	cout << pt << ' ' << spt << endl;
-		//	getchar();
-		// }
-		// read_kinematics(kinematics, m1, m2, k1, k2, p1, p2, pi1, pi2, jpsi);
-		selections(h_background, m1, m2, chi2, 1, lxy, pt / (pt + spt));
-		if (i % 100000 == 0) {
-			std::cout << '#';
-			std::cout.flush();
-		}
+		select_step(bs[0], w, 0, start[0], end[0], step[0], chi2);
+		select_step(bs[1], w, 1, start[1], end[1], step[1], lxy);
+		select_step(bs[2], w, 1, start[2], end[2], step[2], pt / (spt + pt));
 	}
 	std::cout << std::endl;
 
-	std::vector<float> background_supression, signal_acceptance;
-	auto const background_total = h_background.GetBinContent(1);
-	auto const signal_total = h_signal.GetBinContent(1);
-	for (size_t i = 1; i < n_selections; ++i) {
-		auto const b = h_background.GetBinContent(i);
-		auto const s = h_signal.GetBinContent(i);
-		if (s == 0 || b == 0) break;
-		auto const bs = 1 - b / background_total;
-		auto const sa = s / signal_total;
-		background_supression.push_back(bs);
-		signal_acceptance.push_back(sa);
-		auto const label = h_background.GetXaxis()->GetBinLabel(i);
-		std::cout << label << ':' << s << ' ' << b	<< ' ' << sa << ' ' << bs << std::endl;
+	for (size_t j = 0; j < std::size(name); ++j) {
+		auto const t_bs = bs[j]->GetBinContent(0);
+		auto const t_sa = sa[j]->GetBinContent(0);
+		auto x = bs[j]->GetXaxis();
+		std::vector<float> v_bs, v_sa;
+		std::vector<int> v_th;
+		auto const N = x->GetNbins();
+		for (size_t i = 1; i <= N; ++i) {
+			auto const b = bs[j]->GetBinContent(i);
+			auto const s = sa[j]->GetBinContent(i);
+			auto const t = std::atoi(x->GetBinLabel(i));
+			if (b == 0 || s == 0) continue;
+			auto const bss = 1 - b / t_bs;
+			auto const sas = s / t_sa;
+			std::cout
+				<< name[j] << " | " << (t / 100.0f)
+				<< " : " << s << ' ' << b
+				<< " = " << sas << ' ' << bss
+				<< std::endl;
+			v_bs.emplace_back(bss);
+			v_sa.emplace_back(sas);
+			v_th.emplace_back(t);
+		}
+		bs[j]->Write();
+		sa[j]->Write();
+
+		auto c = new TCanvas(name[j], name[j]);
+		auto g = new TGraph(v_bs.size(), v_sa.data(), v_bs.data());
+		g->SetTitle(name[j]);
+		g->SetName(name[j]);
+		auto gx = g->GetXaxis();
+		// g->GetXaxis()->SetRangeUser(0, 1);
+		gx->SetTitle("signal acceptance");
+		auto gy = g->GetYaxis();
+		gy->SetRangeUser(0, 1);
+		gy->SetTitle("background supression");
+		g->SetMarkerStyle(20);
+		g->Draw();
+		g->Write();
+
+		auto l = new TText();
+		l->SetTextSize(0.04);
+		for (size_t i = 0; i < v_bs.size(); ++i) {
+			char nm[] = "x.xx";
+			nm[0] = '0' + v_th[i] / 100;
+			nm[2] = '0' + (v_th[i] % 100) / 10;
+			nm[3] = '0' + v_th[i] % 10;
+			l->DrawText(v_sa[i] + 0.005, v_bs[i], nm);
+		}
+
+		auto line = new TLine(0.9, 0, 0.9, 1);
+		line->Draw();
+		c->Update();
+		c->Draw();
+		c->SaveAs((std::string("output/") + std::to_string(j) + ".eps").c_str());
+		c->Write();
 	}
 
-	TCanvas canvas;
-	TGraph graph(background_supression.size(), signal_acceptance.data(), background_supression.data());
-	auto x = graph.GetX();
-	auto y = graph.GetY();
-	auto a = h_background.GetXaxis();
-	for (size_t i = 1; i < n_selections; ++i) {
-		auto* text = new TLatex(x[i], y[i], a->GetBinLabel(i));
-		text->SetTextSize(0.025);
-		graph.GetListOfFunctions()->Add(text);
-	}
-	graph.GetXaxis()->SetRangeUser(0, 1);
-	graph.GetYaxis()->SetRangeUser(0, 1);
-	graph.SetMarkerStyle(20);
-	graph.Draw();
-	TLine line(0.9, 0, 0.9, 1);
-	line.Draw();
-	canvas.SaveAs("selections/lxy.C");
-	canvas.SaveAs("selections/lxy.png");
 }
