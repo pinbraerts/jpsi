@@ -128,11 +128,11 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 	TH1F h_jpk("jpk", "jpk", n_selections, 5.3, 7);
 	TH1F h_jkp("jkp", "jkp", n_selections, 5.3, 7);
 	TH1F h_JKP("jkp_s", "jkp_s", n_selections, 5.3, 7);
-	TH1F h_jki("jki", "jki", n_selections, 3.6, 6.6);
-	TH1F h_jik("jik", "jik", n_selections, 3.6, 6.6);
+	TH1F h_jki("jki", "jki", n_selections, 4.9, 6);
+	TH1F h_jik("jik", "jik", n_selections, 4.9, 6);
 	TH1F h_JKI("jki_s", "jki_s", n_selections, 3.6, 6.6);
 	TH2F h_Jki("jki2d", "jki2d", n_selections, 3.6, 6.6, n_selections, 3.6, 6.6);
-	TH1F h_jkk("jkk", "jkk", n_selections, 4.2, 6.6);
+	TH1F h_jkk("jkk", "jkk", n_selections, 4.9, 6);
 	TH1F h_jii("jii", "jii", n_selections, 3.4, 6.4);
 	TH1F h_background("background", "background", n_selections, 0, n_selections);
 	for (size_t i = 0; i < n_background; ++i) {
@@ -162,11 +162,6 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 		auto jk2 = jpsi + k2;
 		if (jk1.M() > 5.1 || jk2.M() > 5.1) continue;
 		h_background.Fill("M(jpsi + k) < 5.1", w);
-
-		auto pk = p1 + k2;
-		auto kp = p2 + k1;
-		if (pk.M() < 2 || kp.M() < 2) continue;
-		h_background.Fill("M(p + k) > 2", w);
 
 		auto kpi = k1 + pi2;
 		auto pik = pi1 + k2;
