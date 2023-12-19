@@ -207,11 +207,11 @@ void fit() {
 		"\\Lambda^0_b \\rightarrow J/\\psi p \\pi",
 	};
 
-	gStyle->SetOptTitle(0);
-	// gStyle->SetOptStat(0);
-	auto canvas = new TCanvas();
-	auto legendx = new TLegend(0.6, 0.25, 0.9, 0.9);
-	auto legendy = new TLegend(0.6, 0.25, 0.9, 0.9);
+	gStyle->SetOptTitle(1);
+	gStyle->SetOptStat(0);
+	auto canvas = new TCanvas("jkk", "jkk", 1000, 500);
+	auto legendx = new TLegend(0.55, 0.25, 0.9, 0.9);
+	auto legendy = new TLegend(0.55, 0.25, 0.9, 0.9);
 	auto stackx = new THStack("stackx", "stackx");
 	auto stacky = new THStack("stacky", "stacky");
 	auto fullx = full->ProjectionX("", 1, N);
@@ -230,6 +230,8 @@ void fit() {
 			x->SetFillColor(kRed);
 			x->SetLineColor(kRed);
 			x->Draw("E");
+			x->GetYaxis()->SetRangeUser(0, 4100);
+			x->SetTitle("M(J/\\psi p K)");
 			chi2[0] = fullx->Chi2Test(x);
 		}
 		x->Write();
@@ -245,6 +247,7 @@ void fit() {
 			y->SetFillColor(kRed);
 			y->SetLineColor(kRed);
 			y->Draw("E");
+			y->SetTitle("M(J/\\psi K p)");
 			chi2[1] = fully->Chi2Test(y);
 		}
 		y->Write();
@@ -263,5 +266,7 @@ void fit() {
 	legendy->Draw();
 	canvas->Draw();
 	canvas->Write("plot");
+	canvas->SaveAs("output/jpk.eps");
+	canvas->SaveAs("output/jpk.png");
 
 }
