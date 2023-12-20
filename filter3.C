@@ -128,8 +128,8 @@ void filter3(const char* file = "datasets/run2_1quarter.root") {
 	TH1F h_jpk("jpk", "jpk", n_selections, 5.3, 7);
 	TH1F h_jkp("jkp", "jkp", n_selections, 5.3, 7);
 	TH1F h_JKP("jkp_s", "jkp_s", n_selections, 5.3, 7);
-	TH1F h_jki("jki", "jki", n_selections, 4.9, 6);
-	TH1F h_jik("jik", "jik", n_selections, 4.9, 6);
+	TH1F h_jki("jki", "jki", n_selections, 4.7, 6);
+	TH1F h_jik("jik", "jik", n_selections, 4.7, 6);
 	TH1F h_JKI("jki_s", "jki_s", n_selections, 3.6, 6.6);
 	TH2F h_Jki("jki2d", "jki2d", n_selections, 3.6, 6.6, n_selections, 3.6, 6.6);
 	TH1F h_jkk("jkk", "jkk", n_selections, 4.9, 6);
