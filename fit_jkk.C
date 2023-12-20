@@ -9,10 +9,7 @@ Back f;
 
 double background(double const* x, double const* a) {
 	double const xx = x[0] - 5;
-	double const b = a[5] != 0 || a[6] != 0
-		? (a[3] + a[4] * xx) / (a[5] + a[6] * xx)
-		: 0
-	;
+	double const b = (a[3] + a[4] * xx) / (1 + a[5] * xx);
 	return exp(a[0] + xx * a[1] + xx * xx * a[2]) * exp(-b * b);
 }
 
@@ -69,7 +66,7 @@ void fit_jkk(bool fix = false) {
 	};
 
 	for (size_t j = 0; j < std::size(h); ++j) {
-		f[j] = new TF1((obj_name[j] + "_comb_bg").c_str(), background, 5.0, 7.0, 7, 1);
+		f[j] = new TF1((obj_name[j] + "_comb_bg").c_str(), background, 5.0, 7.0, 6, 1);
 		for (size_t i = 0; i < std::size(h[0]); ++i) {
 			h[j][i] = (TH1F*)file[i]->Get(obj_name[j].c_str());
 			h[j][i]->SetName((obj_name[j] + label[i]).c_str());
@@ -89,21 +86,21 @@ void fit_jkk(bool fix = false) {
 
 	double step[]  {
 		1, 1, 1, 1, 1, 1, 1, 1,
-		1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4,
-		1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4,
-		1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4,
+		1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4,
+		1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4,
+		1e-4, 1e-4, 1e-4, 1e-4, 1e-4, 1e-4,
 	};
 	double start[] {
 3086.33, 1074.38, 3556.19, 500.677, 1.15471e-08, 17018.4, 588.073, 2.70347e-08, 
-		20.7639, 139.776, -44.7429, 46.4098, 270.522, 12.4168, 17.4854,
-		13.8807, 32.6371, -11.2272, -1.52885, -5.99689, 0.598787, 0.728846,
-		22.8181, 61.1985, -19.3603, -1.8746, -5.90753, 0.476589, 0.51622
+		20.7639, 139.776, -44.7429, 3.73766188, 21.78677276, 1.40820501,
+		13.8807, 32.6371, -11.2272, -2.55324514, -10.01506379, 1.21720411,
+		22.8181, 61.1985, -19.3603, -3.93336816, -12.39543926, 1.08315551,
 	};
 	char const* name[] {
 		"c_skk", "c_ski", "c_sii", "c_dkk", "c_dii", "c_dki", "c_lpk", "c_lpi",
-		"jkk_a", "jkk_a_x", "jkk_a_x^2", "jkk_b", "jkk_bx", "jkk_c", "jkk_cx",
-		"jki_a", "jki_a_x", "jki_a_x^2", "jki_b", "jki_bx", "jki_c", "jki_cx",
-		"jik_a", "jik_a_x", "jik_a_x^2", "jik_b", "jik_bx", "jik_c", "jik_cx",
+		"jkk_a", "jkk_a_x", "jkk_a_x^2", "jkk_b", "jkk_bx", "jkk_cx",
+		"jki_a", "jki_a_x", "jki_a_x^2", "jki_b", "jki_bx", "jki_cx",
+		"jik_a", "jik_a_x", "jik_a_x^2", "jik_b", "jik_bx", "jik_cx",
 	};
 
 	ROOT::Math::Functor functor(&likelihood, std::size(start));
