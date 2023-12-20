@@ -100,7 +100,7 @@ void fit_jkk() {
 		7.2, 2, -19.56, -0.02, 0.02, 0.11, 0.22,
 	};
 	char const* name[] {
-		"c_skk", "c_ski", "c_sii", "c_dkk", "c_dki", "c_dii", "c_lpk", "c_lpi",
+		"c_skk", "c_ski", "c_sii", "c_dkk", "c_dii", "c_dki", "c_lpk", "c_lpi",
 		"jkk_a", "jkk_a_x", "jkk_a_x^2", "jkk_b", "jkk_bx", "jkk_c", "jkk_cx",
 		"jki_a", "jki_a_x", "jki_a_x^2", "jki_b", "jki_bx", "jki_c", "jki_cx",
 		"jik_a", "jik_a_x", "jik_a_x^2", "jik_b", "jik_bx", "jik_c", "jik_cx",
