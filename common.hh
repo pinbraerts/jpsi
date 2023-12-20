@@ -22,7 +22,6 @@
 #include <TLorentzVector.h>
 #include <TGraph.h>
 #include <TLine.h>
-#include <TAnnotation.h>
 
 #if __cplusplus < 201703L
 
