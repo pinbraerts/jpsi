@@ -38,7 +38,7 @@ double likelihood(double const* p) {
 	return -L;
 }
 
-void fit_jkk() {
+void fit_jkk(bool fix = false) {
 	TFile* file[] = {
 		new TFile("filtered/datasets/run2_1quarter.root"),
 		new TFile("filtered/datasets/mc_BS_to_JPSI_K_K.root"),
@@ -109,13 +109,12 @@ void fit_jkk() {
 	ROOT::Math::Functor functor(&likelihood, std::size(start));
 	m.SetFunction(functor);
 	for (size_t i = 0; i < std::size(start); ++i) {
-		if (i <= 7) {
-			m.SetLimitedVariable(i, name[i], start[i], step[i], 0, 1e6);
-			// m.SetFixedVariable(i, name[i], start[i]);
+		if (fix && i == 6) {
+			m.SetFixedVariable(i, name[i], start[i]);
 		}
-		// else if (i < 22) {
-			// m.SetFixedVariable(i, name[i], start[i]);
-		// }
+		else if (i < 7 && i != 4) {
+			m.SetLimitedVariable(i, name[i], start[i], step[i], 1e-8, 1e6);
+		}
 		else {
 			m.SetVariable(i, name[i], start[i], step[i]);
 		}
