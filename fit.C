@@ -35,8 +35,8 @@ double likelihood(double const* parameters) {
 			double const v_ski = h_ski->GetBinContent(i, j) * parameters[1];
 			double const v_sii = h_sii->GetBinContent(i, j) * parameters[2];
 			double const v_dkk = h_dkk->GetBinContent(i, j) * parameters[3];
-			double const v_dki = h_dki->GetBinContent(i, j) * parameters[4];
-			double const v_dii = h_dii->GetBinContent(i, j) * parameters[5];
+			double const v_dii = h_dii->GetBinContent(i, j) * parameters[4];
+			double const v_dki = h_dki->GetBinContent(i, j) * parameters[5];
 			double const v_lpk = h_lpk->GetBinContent(i, j) * parameters[6];
 			double const v_lpi = h_lpi->GetBinContent(i, j) * parameters[7];
 			double const xx = x->GetBinCenter(i);
@@ -112,14 +112,7 @@ void fit() {
 		// 1, 1,
 	};
 	char const* name[] {
-		"c_skk",
-		"c_ski",
-		"c_sii",
-		"c_dkk",
-		"c_dki",
-		"c_dii",
-		"c_lpk",
-		"c_lpi",
+		"c_skk", "c_ski", "c_sii", "c_dkk", "c_dii", "c_dki", "c_lpk", "c_lpi",
 		"a", "a_x", "a_x^2",
 		"b", "bx", "c", "cx",
 		// "x", "x^",
@@ -152,8 +145,8 @@ void fit() {
 	h_ski->Scale(result[1]);
 	h_sii->Scale(result[2]);
 	h_dkk->Scale(result[3]);
-	h_dki->Scale(result[4]);
-	h_dii->Scale(result[5]);
+	h_dii->Scale(result[4]);
+	h_dki->Scale(result[5]);
 	h_lpk->Scale(result[6]);
 	h_lpi->Scale(result[7]);
 
