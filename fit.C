@@ -52,7 +52,7 @@ double likelihood(double const* parameters) {
 	return -L;
 }
 
-void fit() {
+void fit(bool fix = false) {
 	auto f_jpk = new TFile("filtered/datasets/run2_1quarter.root");
 	auto f_skk = new TFile("filtered/datasets/mc_BS_to_JPSI_K_K.root");
 	auto f_ski = new TFile("filtered/datasets/mc_BS_to_JPSI_K_PI.root");
@@ -121,13 +121,17 @@ void fit() {
 	ROOT::Math::Functor f(&likelihood, std::size(start));
 	m.SetFunction(f);
 	for (size_t i = 0; i < std::size(start); ++i) {
-		m.SetVariable(i, name[i], start[i], step[i]);
-		if (i <= 7) {
-			m.SetVariableLimits(i, 1e0, 1e6);
-			// m.FixVariable(i);
-			// m.SetVariableLimits(i, 1e2, 1e5);
-			// m.SetFixedVariable(i, name[i], 0);
+		if (i > 7) {
+			m.SetVariable(i, name[i], start[i], step[i]);
+			continue;
 		}
+
+		if (fix && (i == 0 || i == 1 || i == 3 || i == 5)) {
+			m.SetFixedVariable(i, name[i], start[i]);
+			continue;
+		}
+
+		m.SetLimitedVariable(i, name[i], start[i], step[i], 1e-9, 1e6);
 	}
 	m.Minimize();
 
