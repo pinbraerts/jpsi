@@ -170,7 +170,9 @@ void fit_jkk(bool fix = false) {
 			auto x = h[j][k];
 			x->SetFillStyle(3001);
 			if (k == 0) {
-				x->SetFillColor(kRed);
+				x->SetMarkerStyle(20);
+				x->SetMarkerSize(1);
+				x->SetMarkerColor(kRed);
 				x->SetLineColor(kRed);
 				x->Draw("E");
 				x->SetTitle(obj_name[j].c_str());

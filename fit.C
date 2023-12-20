@@ -224,7 +224,9 @@ void fit(bool fix = false) {
 			stackx->Add(x);
 		}
 		else {
-			x->SetFillColor(kRed);
+			x->SetMarkerStyle(20);
+			x->SetMarkerSize(1);
+			x->SetMarkerColor(kRed);
 			x->SetLineColor(kRed);
 			x->Draw("E");
 			x->GetYaxis()->SetRangeUser(0, 4100);
@@ -241,7 +243,9 @@ void fit(bool fix = false) {
 			stacky->Add(y);
 		}
 		else {
-			y->SetFillColor(kRed);
+			y->SetMarkerStyle(20);
+			y->SetMarkerSize(1);
+			y->SetMarkerColor(kRed);
 			y->SetLineColor(kRed);
 			y->Draw("E");
 			y->SetTitle("M(J/\\psi K p)");
