@@ -269,4 +269,12 @@ void fit() {
 	canvas->SaveAs("output/jpk.eps");
 	canvas->SaveAs("output/jpk.png");
 
+	if (m.Status() != 0) {
+		std::cerr << "FAILED" << std::endl;
+	}
+
+	std::copy(
+		result, result + 8,
+		std::ostream_iterator<double>(std::cout, ", ")
+	);
 }

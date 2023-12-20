@@ -197,4 +197,12 @@ void fit_jkk() {
 	TVectorD chi2s(chi2.size(), chi2.data());
 	chi2s.Write("chi2s");
 
+	if (m.Status() != 0) {
+		std::cerr << "FAILED" << std::endl;
+	}
+
+	std::copy(
+		result, result + 8,
+		std::ostream_iterator<double>(std::cout, ", ")
+	);
 }

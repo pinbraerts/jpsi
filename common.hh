@@ -28,6 +28,12 @@
 
 namespace std {
 
+template<class T>
+constexpr std::size_t size(T const& array) noexcept
+{
+	return array.size();
+}
+
 template<class T, std::size_t N>
 constexpr std::size_t size(const T (&array)[N]) noexcept
 {
